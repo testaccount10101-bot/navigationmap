@@ -3,6 +3,7 @@ from navigation_system.models.node import NavigationGraph
 from navigation_system.algorithms.pathfinding import a_star
 from navigation_system.models.decision_points import DecisionPointManager
 from navigation_system.utils.wifi_scanner import scan_wifi, get_dummy_wifi_data
+from navigation_system.algorithms.step_instructions import get_navigation_instructions
 from PIL import Image
 import os
 import sqlite3
@@ -26,7 +27,7 @@ graph = NavigationGraph()
 # Load graph from CSV files
 def load_graph_from_csv():
     # Load nodes
-    nodes_path = os.path.join(os.path.dirname(__file__), 'navigation_system\point_table.csv')
+    nodes_path = os.path.join(os.path.dirname(__file__), 'navigation_system/point_table.csv')
     if os.path.exists(nodes_path):
         with open(nodes_path, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
@@ -36,7 +37,7 @@ def load_graph_from_csv():
                     graph.add_node(row[0], row[1], 1, row[2], row[3])
     
     # Load edges
-    edges_path = os.path.join(os.path.dirname(__file__), 'navigation_system\edge_table.csv')
+    edges_path = os.path.join(os.path.dirname(__file__), 'navigation_system/edge_table.csv')
     if os.path.exists(edges_path):
         with open(edges_path, 'r') as csvfile:
             csvreader = csv.reader(csvfile)
@@ -225,6 +226,11 @@ def api_calculate_route():
     
     path = a_star(graph, start_id, end_id)
     
+    instructions = get_navigation_instructions(graph, path)
+    print("\nNavigation Instructions:")
+    for i, instruction in enumerate(instructions, 1):
+        print(f"Step {i}: {instruction}")
+    
     if not path:
         return jsonify({'success': False, 'error': 'No path found'})
     
@@ -247,7 +253,8 @@ def api_calculate_route():
     return jsonify({
         'success': True,
         'path': path,
-        'path_details': path_details
+        'path_details': path_details,
+        'instructions': instructions
     })
 
 @app.route('/api/next-decision-point', methods=['POST'])

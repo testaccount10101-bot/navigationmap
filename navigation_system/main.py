@@ -1,5 +1,6 @@
 from navigation_system.models.node import NavigationGraph
 from navigation_system.algorithms.pathfinding import a_star
+from navigation_system.algorithms.step_instructions import get_navigation_instructions
 import csv
 
 def import_nodes(graph = NavigationGraph()):
@@ -42,7 +43,11 @@ def main():
 
     path = a_star(graph, room1, room2)
     print(f"Path from Room {room1} to Room {room2}: {path}")
-    
+
+    instructions = get_navigation_instructions(graph, path)
+    print("\nNavigation Instructions:")
+    for i, instruction in enumerate(instructions, 1):
+        print(f"Step {i}: {instruction}")
 
 if __name__ == "__main__":
     main()

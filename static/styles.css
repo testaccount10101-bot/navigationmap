@@ -8,6 +8,7 @@ body {
 /* Default background color for map container (Apple Blossom)*/
 #map{
     background: #ffffff;
+    z-index: 0; /* Keep the map in the background */
 }
 
 /* Container for map and popup */
@@ -41,6 +42,53 @@ body {
 /* Wayfinding Popup Initially visible */
 .toggle-popup-checkbox:checked ~ .wayfinding-popup {
     display: none;
+}
+
+/* Directions Panel */
+#directions-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    border-top: 2px solid #ccc;
+    box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    max-height: 50px; /* Initially collapsed */
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    z-index: 2; /* Ensure it's above the map */
+}
+
+/* Arrow Icon (Clickable) */
+.drag-handle {
+    display: block;
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    padding: 5px 0;
+}
+
+/* Arrow Styling */
+.arrow-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-left: 5px solid gray;
+    border-bottom: 5px solid gray;
+    transform: rotate(-45deg); /* Downward arrow */
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Expand when checkbox is checked */
+.toggle-panel-checkbox:checked ~ #directions-panel {
+    max-height: 300px; /* Expanded size */
+    overflow-y: auto;
+}
+
+/* Rotate Arrow Up When Expanded */
+.toggle-panel-checkbox:checked ~ #directions-panel .arrow-icon {
+    transform: rotate(135deg); /* Upward arrow */
 }
 
 /* Find New Route Button */
